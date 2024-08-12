@@ -1,5 +1,5 @@
-import yaml
 from sqlalchemy import create_engine
+import yaml
 import pandas as pd
 
 # Load the credentials
@@ -49,26 +49,30 @@ class RDSDatabaseConnector:
         return df
 
 # Example Usage and calling the methods
+if __name__ == "__main__":
  # Step 1: Load credentials
-credentials = loads_credentials()
+    credentials = loads_credentials()
 
  # Step 2: Create an instance of RDSDatabaseConnector
-connector = RDSDatabaseConnector(credentials)
+    connector = RDSDatabaseConnector(credentials)
 
  # Step 3: Create the engine
-connector._create_sqlalchemy_engine()
+    connector._create_sqlalchemy_engine()
 
 # Step 4: Extract data from the 'customer_activity' table
-df = connector.extract_data()
-print("Data extracted successfully")
-print(df.head())
+    df = connector.extract_data()
+    print("Data extracted successfully")
+    print(df.head())
 
 # Step 5: Save the DataFrame to a CSV file
-file_path = 'customer_activity_data.csv'
-connector._save_date(df, file_path )
-print(f"Data saved to {file_path}")
+    file_path = 'customer_activity_data.csv'
+    connector._save_date(df, file_path )
+    print(f"Data saved to {file_path}")
 
 # Step 6: Load the Dataframe from your local machine into a Pandas dataframe
-loaded_df = connector._load_data(file_path)
-print("Data loaded from CSV successfully")
-print(loaded_df.head())
+    loaded_df = connector._load_data(file_path)
+    print("Data loaded from CSV successfully")
+    print(loaded_df.head())
+
+
+  
