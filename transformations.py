@@ -222,16 +222,22 @@ class Plotter:
            plt.show()
 
     def _graph_with_removed_outliers(self):
-        columns_to_filter = ['informational_duration', 'product_related_duration']
-        for column in columns_to_filter:
-            plt.figure(figsize=(10, 5))
-            sns.boxplot(y=self.df[column], color='green', showfliers=True)
-            sns.swarmplot(y=self.df[column], color='black', size=5)
-            plt.title(f'Boxplot After Outlier Removal of: {column}')
-            plt.ylabel(column)
-            plt.show()
-
-
+         # Plot for 'informational_duration'
+        plt.figure(figsize=(10, 6))
+        plt.boxplot(self.df['informational_duration'])
+        plt.ylim(self.df['informational_duration'].min() - 6, self.df['informational_duration'].max() + 6)
+        plt.title('Boxplot of Informational Duration')
+        plt.ylabel('Duration')
+        plt.show()
+    
+    # Plot for 'product_related_duration'
+        plt.figure(figsize=(10, 6))
+        plt.boxplot(self.df['product_related_duration'])
+        plt.ylim(self.df['product_related_duration'].min() - 6, self.df['product_related_duration'].max() + 6)
+        plt.title('Boxplot of Product Related Duration')
+        plt.ylabel('Duration')
+        plt.show()
+       
 if __name__ == "__main__":
     # Load the DataFrame 
     loaded_df = pd.read_csv('customer_activity_data.csv')
