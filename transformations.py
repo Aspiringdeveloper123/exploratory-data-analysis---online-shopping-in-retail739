@@ -167,6 +167,28 @@ class DataFrameTransform:
              # Print the shape after removing outliers (tuple)
             print(f"New shape after removing outliers from '{col}': {self.df.shape}")
 
+     # PLot correlation heatmap
+    def _plot_correlation_matrix(self):
+        corr_matrix = self.df.select_dtypes(include=[np.number]).corr()
+        fig = px.imshow(corr_matrix, title="Correlation Heatmap")
+        fig.show()
+        return corr_matrix
+
+    def _detect_highly_correlated_columns(self, threshold=0.8):
+
+        corr_matrix = self.df.select_dtypes(include=[np.number]).corr()
+        #Get the upper triangle of the correlation matrix
+        upper_triangle = corr_matrix.where(np.triu(np.ones(corr_matrix.shape), k=1).astype(bool))
+
+    # Find columns with any correlation above the threshold
+        highly_correlated = [column for column in upper_triangle.columns 
+            if any(upper_triangle[column].abs() > threshold)]
+        
+        return highly_correlated
+
+    def _remove_highly_correlated_columns(self, columns_to_remove):
+        self.df = self.df.drop(columns=columns_to_remove, errors='ignore')
+        print(f"Removed columns: {columns_to_remove}")
 
 class Plotter:
     def __init__(self, df, nulls_before, nulls_after, skewed_columns):
@@ -237,7 +259,8 @@ class Plotter:
         plt.title('Boxplot of Product Related Duration')
         plt.ylabel('Duration')
         plt.show()
-       
+
+
 if __name__ == "__main__":
     # Load the DataFrame 
     loaded_df = pd.read_csv('customer_activity_data.csv')
@@ -344,4 +367,13 @@ if __name__ == "__main__":
     df_transform._remove_outliers()
     plotter._graph_with_removed_outliers()
     print("Histograms displayed to visualize data after outlier removal:")
- 
+    
+    # Print correlation matrix
+    print("Plotting initial correlation matrix")
+    df_transform._plot_correlation_matrix()
+
+    # Remove highly correlated columns
+    print("Removing highly correlated columns")
+    columns_to_remove = ['exit_rates', 'bounce_rates']
+    df_transform._remove_highly_correlated_columns(columns_to_remove)
+    print(f"Remaining columns: {df_transform.df.columns.tolist()}")
